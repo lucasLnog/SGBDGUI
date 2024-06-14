@@ -144,6 +144,10 @@ class SGBDGui:
                         Node("Chave primária (CHAVE)", parent=column_node)
 
     def showAllDataFromTable(self, table_name):
+
+        if self.database_type not in ('postgresql', 'mysql'):
+            raise ValueError("Falha na conexão: verifique o nome do seu banco de dados e/ou credenciais,e tente novamente.")
+
         print(120 * "-")
         option = input("A consulta dos dados está limitada a 1000 registros. Deseja diminuir [Y/N]? ")
         while option not in ('Y', 'N'):
@@ -197,6 +201,10 @@ class SGBDGui:
             raise ValueError("Ocorreu um erro ao executar ao query! Verifique se a tabela digitada existe.")
 
     def showSQLConsult(self, query):
+
+        if self.database_type not in ('postgresql', 'mysql'):
+            raise ValueError("Falha na conexão: verifique o nome do seu banco de dados e/ou credenciais,e tente novamente.")
+
         try:
             while True:
                 if query.lower().startswith("select"):
@@ -252,7 +260,7 @@ class SGBDGui:
     def exportToJSON(self, rows, headers, filename):
         try:
             with open(filename, 'w') as file:
-                json.dump([dict(zip(headers, row)) for row in rows], file, indent=4)
+                json.dump([dict(zip(headers, row)) for row in rows], file, indent=4, default=str)
             print(f"Dados da consulta exportados com sucesso em {filename}.")
         except ValueError as e:
             raise ValueError(e)
